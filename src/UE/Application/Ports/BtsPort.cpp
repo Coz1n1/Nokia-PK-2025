@@ -15,6 +15,10 @@ void BtsPort::start(IBtsEventsHandler &handler)
 {
     transport.registerMessageCallback([this](BinaryMessage msg) {handleMessage(msg);});
     this->handler = &handler;
+    transport.registerDisconnectedCallback([this]() {
+        if (this->handler)
+            this->handler->handleDisconnected();
+    });
 }
 
 void BtsPort::stop()
@@ -57,6 +61,12 @@ void BtsPort::handleMessage(BinaryMessage msg)
     catch (std::exception const& ex)
     {
         logger.logError("handleMessage error: ", ex.what());
+        if (std::string(ex.what()).find("connection lost") != std::string::npos)
+        {
+            logger.logError("Connection lost");
+            if (handler)
+                handler->handleDisconnected();
+        }
     }
 }
 

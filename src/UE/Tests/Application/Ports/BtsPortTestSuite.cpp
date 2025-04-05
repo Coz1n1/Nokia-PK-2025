@@ -29,6 +29,8 @@ protected:
     {
         EXPECT_CALL(transportMock, registerMessageCallback(_))
                 .WillOnce(SaveArg<0>(&messageCallback));
+        EXPECT_CALL(transportMock, registerDisconnectedCallback(_))
+                .Times(AnyNumber());
         objectUnderTest.start(handlerMock);
     }
     ~BtsPortTestSuite()
