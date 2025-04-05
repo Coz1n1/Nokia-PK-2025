@@ -2,6 +2,9 @@
 
 #include "IEventsHandler.hpp"
 #include "Logger/ILogger.hpp"
+#include "Ports/IBtsPort.hpp"
+#include "Ports/IUserPort.hpp" 
+#include "Ports/ITimerPort.hpp"
 #include <memory>
 
 namespace ue

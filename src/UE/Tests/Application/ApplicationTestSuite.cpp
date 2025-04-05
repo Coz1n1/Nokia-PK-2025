@@ -7,6 +7,8 @@
 #include "Mocks/IUserPortMock.hpp"
 #include "Mocks/ITimerPortMock.hpp"
 #include "Messages/PhoneNumber.hpp"
+#include "States/ConnectingState.hpp"
+#include "States/ConnectedState.hpp"
 #include <memory>
 
 namespace ue
@@ -62,4 +64,23 @@ TEST_F(ApplicationConnectingTestSuite, shallHandleAttachAccept)
     objectUnderTest.handleAttachAccept();
 }
 
+TEST_F(ApplicationConnectingTestSuite, shallDisConnectOnAttachReject)
+{
+    EXPECT_CALL(timerPortMock, stopTimer()).Times(AtLeast(1));
+    EXPECT_CALL(userPortMock, showNotConnected()).Times(AtLeast(1));
+    objectUnderTest.handleAttachReject();
+}
+
+TEST_F(ApplicationConnectingTestSuite, shallDisConnectOnTimeout)
+{
+    EXPECT_CALL(userPortMock, showNotConnected()).Times(AtLeast(1));
+    objectUnderTest.handleTimeout();
+}
+
+TEST_F(ApplicationTestSuite, shallHandleDisconnectedInConnectedState)
+{
+    objectUnderTest.getContext().setState<ConnectedState>();
+    EXPECT_CALL(userPortMock, showNotConnected()).Times(AtLeast(1));
+    objectUnderTest.handleDisconnected();
+}
 }
