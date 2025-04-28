@@ -19,7 +19,8 @@ public:
 
 private:
     void handleMessage(BinaryMessage msg);
-
+    void handleDisconnect();
+ 
     common::PrefixedLogger logger;
     common::ITransport& transport;
     common::PhoneNumber phoneNumber;

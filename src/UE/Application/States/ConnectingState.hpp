@@ -16,6 +16,7 @@ public:
 
     // ITimerEventsHandler interface
     void handleTimeout() override;
+    void handleDisconnect() override;
 };
 
 }
