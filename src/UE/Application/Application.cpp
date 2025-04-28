@@ -41,4 +41,8 @@ void Application::handleAttachReject()
     context.state->handleAttachReject();
 }
 
+void Application::handleDisconnect()
+{
+    context.state->handleDisconnect();
+}
 }
