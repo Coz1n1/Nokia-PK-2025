@@ -46,15 +46,11 @@ void ConnectedState::showSmsListView()
 {
     context.user.showSmsListView();
 
-    auto messages = smsDb.getSmsMessages();
     currentMessagesList = smsDb.getSmsMessages();
     auto& menu = context.user.getListViewMode();
 
-    for (size_t i = 0; i < messages.size(); ++i)
     for (size_t i = 0; i < currentMessagesList.size(); ++i)
     {
-        const auto& message = messages[i];
-        std::string label = "From: " + to_string(message.from);
         const auto& message = currentMessagesList[i];
         std::string label;
         if (message.isSent) {

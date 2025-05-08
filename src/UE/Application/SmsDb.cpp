@@ -5,7 +5,6 @@ namespace ue
 
 void SmsDb::addSms(PhoneNumber from, const std::string& text)
 {
-    messages.push_back({from, text, false});
     SmsMessage message;
     message.from = from;
     message.to = PhoneNumber{};
