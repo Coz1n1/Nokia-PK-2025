@@ -14,7 +14,6 @@ public:
     IUserEventsHandlerMock();
     ~IUserEventsHandlerMock() override;
 
-    
     MOCK_METHOD(void, handleHomeClicked, (), (final));
     MOCK_METHOD(void, handleSmsComposeClicked, (), (final));
     MOCK_METHOD(void, handleSmsViewClicked, (), (final));
@@ -33,6 +32,8 @@ public:
     MOCK_METHOD(void, showSmsListView, (), (final));
     MOCK_METHOD(void, showSmsComposerView, (), (final));
     MOCK_METHOD(IUeGui::IListViewMode&, getListViewMode, (), (final));
+    MOCK_METHOD(IUeGui::ISmsComposeMode&, getSmsComposeMode, (), (final));
+    MOCK_METHOD(void, setAcceptCallback, (IUeGui::Callback), (final));
 };
 
 }
