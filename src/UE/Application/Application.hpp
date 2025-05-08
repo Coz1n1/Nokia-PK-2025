@@ -28,8 +28,14 @@ public:
     void handleSib(common::BtsId btsId) override;
     void handleAttachAccept() override;
     void handleAttachReject() override;
-    void handleDisconnect() override;
-    
+    void handleDisconnected() override;
+    void handleSms(common::PhoneNumber from, const std::string& text) override;
+
+    // IUserEventsHandler interface
+    void handleHomeClicked() override;
+    void handleSmsComposeClicked() override;
+    void handleSmsViewClicked() override;
+
 private:
     Context context;
     common::PrefixedLogger logger;

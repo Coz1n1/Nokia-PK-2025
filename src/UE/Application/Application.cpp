@@ -41,8 +41,29 @@ void Application::handleAttachReject()
     context.state->handleAttachReject();
 }
 
-void Application::handleDisconnect()
+void Application::handleDisconnected()
 {
-    context.state->handleDisconnect();
+    context.state->handleDisconnected();
 }
+
+void Application::handleSms(common::PhoneNumber from, const std::string& text)
+{
+    context.state->handleSms(from, text);
+}
+
+void Application::handleHomeClicked()
+{
+    context.state->handleHomeClicked();
+}
+
+void Application::handleSmsComposeClicked()
+{
+    context.state->handleSmsComposeClicked();
+}
+
+void Application::handleSmsViewClicked()
+{
+    context.state->handleSmsViewClicked();
+}
+
 }
