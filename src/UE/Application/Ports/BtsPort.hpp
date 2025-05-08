@@ -16,11 +16,11 @@ public:
     void stop();
 
     void sendAttachRequest(common::BtsId) override;
+    void sendSms(common::PhoneNumber recipient, const std::string& text) override;
 
 private:
     void handleMessage(BinaryMessage msg);
-    void handleDisconnect();
- 
+
     common::PrefixedLogger logger;
     common::ITransport& transport;
     common::PhoneNumber phoneNumber;

@@ -42,7 +42,7 @@ void UserPort::showConnected()
     menu.clearSelectionList();
     menu.addSelectionListItem("Compose SMS", "");
     menu.addSelectionListItem("View SMS", "");
-    
+
     setMenuCallback();
 }
 
@@ -56,7 +56,7 @@ void UserPort::showSmsListView()
     IUeGui::IListViewMode& menu = gui.setListViewMode();
     menu.clearSelectionList();
     // Messages will be populated by the Application class
-    
+
     setMenuCallback();
 }
 
@@ -68,6 +68,26 @@ void UserPort::showSmsComposerView()
 IUeGui::IListViewMode& UserPort::getListViewMode()
 {
     return gui.setListViewMode();
+}
+
+IUeGui::ISmsComposeMode& UserPort::getSmsComposeMode()
+{
+    return gui.setSmsComposeMode();
+}
+
+IUeGui::ITextMode& UserPort::showViewTextMode()
+{
+    return gui.setViewTextMode();
+}
+
+void UserPort::setAcceptCallback(IUeGui::Callback callback)
+{
+    gui.setAcceptCallback(callback);
+}
+
+void UserPort::setRejectCallback(IUeGui::Callback callback)
+{
+    gui.setRejectCallback(callback);
 }
 
 void UserPort::setMenuCallback()

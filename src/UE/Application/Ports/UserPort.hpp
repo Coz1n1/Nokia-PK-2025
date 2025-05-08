@@ -22,13 +22,17 @@ public:
     void showSmsListView() override;
     void showSmsComposerView() override;
     IUeGui::IListViewMode& getListViewMode() override;
+    IUeGui::ISmsComposeMode& getSmsComposeMode() override;
+    IUeGui::ITextMode& showViewTextMode() override;
+    void setAcceptCallback(IUeGui::Callback) override;
+    void setRejectCallback(IUeGui::Callback) override;
 
 private:
     common::PrefixedLogger logger;
     IUeGui& gui;
     common::PhoneNumber phoneNumber;
     IUserEventsHandler* handler = nullptr;
-    
+
     void setMenuCallback();
 };
 
