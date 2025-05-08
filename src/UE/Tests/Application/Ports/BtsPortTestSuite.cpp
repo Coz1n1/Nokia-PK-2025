@@ -31,7 +31,7 @@ protected:
         EXPECT_CALL(transportMock, registerMessageCallback(_))
                 .WillOnce(SaveArg<0>(&messageCallback));
         EXPECT_CALL(transportMock, registerDisconnectedCallback(_))
-                 .WillOnce(SaveArg<0>(&disconnectedCallback));
+                .WillOnce(SaveArg<0>(&disconnectedCallback));
         objectUnderTest.start(handlerMock);
     }
     ~BtsPortTestSuite()
@@ -95,6 +95,27 @@ TEST_F(BtsPortTestSuite, shallSendAttachRequest)
     ASSERT_NO_THROW(EXPECT_EQ(common::PhoneNumber{}, reader.readPhoneNumber()));
     ASSERT_NO_THROW(EXPECT_EQ(BTS_ID, reader.readBtsId()));
     ASSERT_NO_THROW(reader.checkEndOfMessage());
+}
+
+TEST_F(BtsPortTestSuite, shallHandleDisconnected)
+{
+    EXPECT_CALL(handlerMock, handleDisconnected());
+    ASSERT_NE(nullptr, disconnectedCallback);
+    disconnectedCallback();
+}
+
+TEST_F(BtsPortTestSuite, shallHandleSmsMessage)
+{
+    const common::PhoneNumber SENDER_NUMBER{123};
+    const std::string SMS_TEXT = "Hello, this is a test message!";
+    
+    EXPECT_CALL(handlerMock, handleSms(SENDER_NUMBER, SMS_TEXT));
+    
+    common::OutgoingMessage msg{common::MessageId::Sms,
+                               SENDER_NUMBER,
+                               PHONE_NUMBER};
+    msg.writeText(SMS_TEXT);
+    messageCallback(msg.getMessage());
 }
 
 }
