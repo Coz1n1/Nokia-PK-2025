@@ -11,3 +11,5 @@ add_subdirectory(googletest)
 add_subdirectory(UE)
 add_subdirectory(BTS)
 add_subdirectory(COMMON)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})

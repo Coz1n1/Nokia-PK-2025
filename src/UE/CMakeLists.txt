@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 
+
 project(UE)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -12,6 +13,9 @@ set(COMMON_DIR ${UE_DIR}/../COMMON)
 include_directories(${UE_APP_DIR})
 include_directories(${UE_APPENV_DIR})
 include_directories(${COMMON_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+
 
 add_subdirectory(Application)
 add_subdirectory(ApplicationEnvironment)

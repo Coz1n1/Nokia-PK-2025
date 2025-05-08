@@ -4,6 +4,10 @@
 #include "Ports/UserPort.hpp"
 #include "Ports/TimerPort.hpp"
 
+
+#include "MessageReceiver.hpp"  // <-- dodajemy nasz odbiornik
+#include "Messages.hpp"
+
 int main(int argc, char* argv[])
 {
     using namespace ue;
@@ -26,5 +30,17 @@ int main(int argc, char* argv[])
     bts.stop();
     user.stop();
     timer.stop();
+
+    {
+        MessageReceiver receiver;
+        Message msg("To jest testowa wiadomość!");
+        receiver.receiveMessage(msg);
+    }
+    appEnv->startMessageLoop();
+
+    // STOP komponentów
+    bts.stop();
+    user.stop();
+    timer.stop(); 
 }
 
