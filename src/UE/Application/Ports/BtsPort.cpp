@@ -51,9 +51,15 @@ void BtsPort::handleMessage(BinaryMessage msg)
                 handler->handleAttachReject();
             break;
         }
+        case common::MessageId::Sms:
+        {
+            std::string text = reader.readRemainingText();
+            logger.logDebug("Received SMS from: ", from, ", text: ", text);
+            handler->handleSms(from, text);
+            break;
+        }
         default:
             logger.logError("unknow message: ", msgId, ", from: ", from);
-
         }
     }
     catch (std::exception const& ex)
@@ -76,6 +82,16 @@ void BtsPort::sendAttachRequest(common::BtsId btsId)
 void BtsPort::handleDisconnect()
 {
     handler->handleDisconnect();
+}
+
+void BtsPort::sendSms(common::PhoneNumber recipient, const std::string& text)
+{
+    logger.logDebug("sendSms to: ", recipient, ", text: ", text);
+    common::OutgoingMessage msg{common::MessageId::Sms,
+                               phoneNumber,
+                               recipient};
+    msg.writeText(text);
+    transport.sendMessage(msg.getMessage());
 }
 
 }
