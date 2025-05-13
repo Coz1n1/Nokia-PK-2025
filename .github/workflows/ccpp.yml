@@ -17,8 +17,13 @@ jobs:
         
     steps:
     - uses: actions/checkout@v2
-    - name: Install Qt
+    - name: Install 7zip (required for Qt .7z extraction)
+      run: sudo apt-get update && sudo apt-get install -y p7zip-full
+    - name: Install Qt with qtgraphicaleffects
       uses: jurplel/install-qt-action@v2
+      with:
+        version: '6.5.2'
+        modules: 'qtgraphicaleffects'
     - name: cmake
       run: cmake .
     - name: make all targets
