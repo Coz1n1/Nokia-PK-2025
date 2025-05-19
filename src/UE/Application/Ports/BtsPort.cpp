@@ -58,6 +58,31 @@ void BtsPort::handleMessage(BinaryMessage msg)
             handler->handleSms(from, text);
             break;
         }
+        case common::MessageId::CallRequest:
+        {
+            logger.logDebug("Received Call Request from: ", from);
+            handler->handleCallRequest(from);
+            break;
+        }
+        case common::MessageId::CallAccepted:
+        {
+            logger.logDebug("Call Accepted from: ", from);
+            handler->handleCallAccepted(from);
+            break;
+        }
+        case common::MessageId::CallDropped:
+        {
+            logger.logDebug("Call Dropped from: ", from);
+            handler->handleCallDropped(from);
+            break;
+        }
+        case common::MessageId::CallTalk:
+        {
+            std::string text = reader.readRemainingText();
+            logger.logDebug("Call Talk from: ", from, ", text: ", text);
+            handler->handleCallTalk(from, text);
+            break;
+        }
         default:
             logger.logError("unknow message: ", msgId, ", from: ", from);
         }
