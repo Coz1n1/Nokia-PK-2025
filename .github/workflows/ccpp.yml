@@ -17,13 +17,13 @@ jobs:
         
     steps:
     - uses: actions/checkout@v2
-    - name: Install 7zip (required for Qt .7z extraction)
-      run: sudo apt-get update && sudo apt-get install -y p7zip-full
-    - name: Install Qt5
-      uses: jurplel/install-qt-action@v2
-      with:
-        version: '5.15.2'
-        modules: 'qtwidgets'
+    - name: Install Qt
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          qtbase5-dev \
+          qt5-qmake \
+          qttools5-dev-tools
     - name: cmake
       run: cmake .
     - name: make all targets
