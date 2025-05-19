@@ -24,7 +24,6 @@ jobs:
           qtbase5-dev \
           qt5-qmake \
           qttools5-dev-tools
-      #uses: jurplel/install-qt-action@v2
     - name: cmake
       run: cmake .
     - name: make all targets
