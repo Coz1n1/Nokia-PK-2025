@@ -11,9 +11,10 @@ class ConnectedState : public BaseState
 public:
     ConnectedState(Context& context);
 
-
-    void handleDisconnect() override;
+    // IBtsEventsHandler interface
+    void handleDisconnected() override;
     void handleSms(common::PhoneNumber from, const std::string& text) override;
+    void handleCallRequest(common::PhoneNumber from) override;
     
     // IUserEventsHandler interface
     void handleHomeClicked() override;
