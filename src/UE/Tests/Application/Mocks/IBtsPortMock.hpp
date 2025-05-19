@@ -15,7 +15,7 @@ public:
     MOCK_METHOD(void, handleSib, (common::BtsId), (final));
     MOCK_METHOD(void, handleAttachAccept, (), (final));
     MOCK_METHOD(void, handleAttachReject, (), (final));
-    MOCK_METHOD(void, handleDisconnect, (), (final));
+    MOCK_METHOD(void, handleDisconnected, (), (final));
     MOCK_METHOD(void, handleSms, (common::PhoneNumber, const std::string&), (final));
     MOCK_METHOD(void, handleCallRequest, (common::PhoneNumber), (final));
     MOCK_METHOD(void, handleCallAccepted, (common::PhoneNumber), (final));
