@@ -21,10 +21,10 @@ public:
     void sendCallAccepted(common::PhoneNumber recipient) override;
     void sendCallDropped(common::PhoneNumber recipient) override;
     void sendCallTalk(common::PhoneNumber recipient, const std::string& text) override;
-    
+
 private:
     void handleMessage(BinaryMessage msg);
- 
+
     common::PrefixedLogger logger;
     common::ITransport& transport;
     common::PhoneNumber phoneNumber;

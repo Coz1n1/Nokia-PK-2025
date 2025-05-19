@@ -14,7 +14,7 @@ BtsPort::BtsPort(common::ILogger &logger, common::ITransport &transport, common:
 void BtsPort::start(IBtsEventsHandler &handler)
 {
     transport.registerMessageCallback([this](BinaryMessage msg) {handleMessage(msg);});
-    transport.registerDisconnectedCallback([this]() {handleDisconnected();});
+    transport.registerDisconnectedCallback([this]() { this->handler->handleDisconnected(); });
     this->handler = &handler;
 }
 
@@ -104,15 +104,47 @@ void BtsPort::sendAttachRequest(common::BtsId btsId)
     transport.sendMessage(msg.getMessage());
 }
 
-void BtsPort::handleDisconnect()
-{
-    handler->handleDisconnect();
-}
-
 void BtsPort::sendSms(common::PhoneNumber recipient, const std::string& text)
 {
     logger.logDebug("sendSms to: ", recipient, ", text: ", text);
     common::OutgoingMessage msg{common::MessageId::Sms,
+                               phoneNumber,
+                               recipient};
+    msg.writeText(text);
+    transport.sendMessage(msg.getMessage());
+}
+
+void BtsPort::sendCallRequest(common::PhoneNumber recipient)
+{
+    logger.logDebug("sendCallRequest to: ", recipient);
+    common::OutgoingMessage msg{common::MessageId::CallRequest,
+                               phoneNumber,
+                               recipient};
+    transport.sendMessage(msg.getMessage());
+}
+
+void BtsPort::sendCallAccepted(common::PhoneNumber recipient)
+{
+    logger.logDebug("sendCallAccepted to: ", recipient);
+    common::OutgoingMessage msg{common::MessageId::CallAccepted,
+                               phoneNumber,
+                               recipient};
+    transport.sendMessage(msg.getMessage());
+}
+
+void BtsPort::sendCallDropped(common::PhoneNumber recipient)
+{
+    logger.logDebug("sendCallDropped to: ", recipient);
+    common::OutgoingMessage msg{common::MessageId::CallDropped,
+                               phoneNumber,
+                               recipient};
+    transport.sendMessage(msg.getMessage());
+}
+
+void BtsPort::sendCallTalk(common::PhoneNumber recipient, const std::string& text)
+{
+    logger.logDebug("sendCallTalk to: ", recipient, ", text: ", text);
+    common::OutgoingMessage msg{common::MessageId::CallTalk,
                                phoneNumber,
                                recipient};
     msg.writeText(text);
