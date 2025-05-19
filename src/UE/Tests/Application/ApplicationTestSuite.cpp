@@ -80,7 +80,7 @@ TEST_F(ApplicationConnectingTestSuite, shallDisConnectOnTimeout)
 TEST_F(ApplicationConnectingTestSuite, shallDisConnectOnDisconnect)
 {
     EXPECT_CALL(userPortMock, showNotConnected());
-    objectUnderTest.handleDisconnect();
+    objectUnderTest.handleDisconnected();
 }
 
 }
