@@ -19,11 +19,12 @@ class TalkingStateTestSuite : public Test
 protected:
     const common::PhoneNumber PEER_NUMBER{123};
     NiceMock<common::ILoggerMock> loggerMock;
-    StrictMock<IBtsPortMock> btsPortMock;
-    StrictMock<IUserPortMock> userPortMock;
+    NiceMock<IBtsPortMock> btsPortMock;
+    NiceMock<IUserPortMock> userPortMock;
     NiceMock<ITimerPortMock> timerPortMock;
-    StrictMock<ICallModeMock> callModeMock;
-    StrictMock<ITextModeMock> textModeMock;
+    NiceMock<ICallModeMock> callModeMock;
+    NiceMock<ITextModeMock> textModeMock;
+    NiceMock<IListViewModeMock> listViewModeMock;
     
     Context context{loggerMock, btsPortMock, userPortMock, timerPortMock};
     IUeGui::Callback acceptCallback;
@@ -33,6 +34,7 @@ protected:
     {
         ON_CALL(userPortMock, setCallMode()).WillByDefault(ReturnRef(callModeMock));
         ON_CALL(userPortMock, showViewTextMode()).WillByDefault(ReturnRef(textModeMock));
+        ON_CALL(userPortMock, getListViewMode()).WillByDefault(ReturnRef(listViewModeMock));
         
         EXPECT_CALL(userPortMock, setCallMode());
         EXPECT_CALL(callModeMock, clearIncomingText());
@@ -58,10 +60,9 @@ TEST_F(TalkingStateTestSuite, shallSendCallTalkOnAcceptWithText)
     ::testing::Mock::VerifyAndClearExpectations(&btsPortMock);
     ::testing::Mock::VerifyAndClearExpectations(&callModeMock);
     
-    EXPECT_CALL(userPortMock, setCallMode());
+    EXPECT_CALL(userPortMock, setCallMode()).Times(AnyNumber());
     EXPECT_CALL(callModeMock, getOutgoingText()).WillOnce(Return(TALK_TEXT));
     EXPECT_CALL(btsPortMock, sendCallTalk(PEER_NUMBER, TALK_TEXT));
-    EXPECT_CALL(userPortMock, setCallMode());
     EXPECT_CALL(callModeMock, clearOutgoingText());
     
     acceptCallback();
@@ -90,6 +91,7 @@ TEST_F(TalkingStateTestSuite, shallEndCallOnReject)
     ::testing::Mock::VerifyAndClearExpectations(&btsPortMock);
     
     EXPECT_CALL(btsPortMock, sendCallDropped(PEER_NUMBER));
+    EXPECT_CALL(userPortMock, showConnected());
     
     rejectCallback();
 }
@@ -101,6 +103,7 @@ TEST_F(TalkingStateTestSuite, shallEndCallOnHomeButton)
     ::testing::Mock::VerifyAndClearExpectations(&btsPortMock);
     
     EXPECT_CALL(btsPortMock, sendCallDropped(PEER_NUMBER));
+    EXPECT_CALL(userPortMock, showConnected());
     
     objectUnderTest.handleHomeClicked();
 }
@@ -120,7 +123,7 @@ TEST_F(TalkingStateTestSuite, shallHandleReceivedCallTalkMessages)
 
 TEST_F(TalkingStateTestSuite, shallIgnoreCallTalkFromWrongNumber)
 {
-    const common::PhoneNumber WRONG_NUMBER{123};
+    const common::PhoneNumber WRONG_NUMBER{200};
     const std::string RECEIVED_TEXT = "Can you hear me?";
     TalkingState objectUnderTest{context, PEER_NUMBER};
     ::testing::Mock::VerifyAndClearExpectations(&userPortMock);
@@ -139,13 +142,14 @@ TEST_F(TalkingStateTestSuite, shallHandleCallDroppedFromPeer)
     
     EXPECT_CALL(userPortMock, showViewTextMode());
     EXPECT_CALL(textModeMock, setText(HasSubstr("Call ended by: " + to_string(PEER_NUMBER))));
-
+    EXPECT_CALL(userPortMock, showConnected());
+    
     objectUnderTest.handleCallDropped(PEER_NUMBER);
 }
 
 TEST_F(TalkingStateTestSuite, shallIgnoreCallDroppedFromWrongNumber)
 {
-    const common::PhoneNumber WRONG_NUMBER{123};
+    const common::PhoneNumber WRONG_NUMBER{200};
     TalkingState objectUnderTest{context, PEER_NUMBER};
     ::testing::Mock::VerifyAndClearExpectations(&userPortMock);
     

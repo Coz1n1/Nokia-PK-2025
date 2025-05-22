@@ -26,12 +26,13 @@ DiallingState::~DiallingState()
 
 void DiallingState::showDialView()
 {
+    auto& textMode = context.user.showViewTextMode();
+    textMode.setText("Enter phone number to call\nThen press green button to dial");
+
     auto& callMode = context.user.setCallMode();
     
     callMode.clearIncomingText();
     callMode.clearOutgoingText();
-    
-    callMode.appendIncomingText("Enter phone number below\nThen press green button to dial");
     
     context.user.setAcceptCallback([this]() {
         logger.logInfo("Call request initiated by user");

@@ -20,10 +20,12 @@ class ReceivingCallStateTestSuite : public Test
 protected:
     const common::PhoneNumber CALLER_NUMBER{123};
     NiceMock<common::ILoggerMock> loggerMock;
-    StrictMock<IBtsPortMock> btsPortMock;
-    StrictMock<IUserPortMock> userPortMock;
-    StrictMock<ITimerPortMock> timerPortMock;
-    StrictMock<ITextModeMock> textModeMock;
+    NiceMock<IBtsPortMock> btsPortMock;
+    NiceMock<IUserPortMock> userPortMock;
+    NiceMock<ITimerPortMock> timerPortMock;
+    NiceMock<ITextModeMock> textModeMock;
+    NiceMock<IListViewModeMock> listViewModeMock;
+    NiceMock<ICallModeMock> callModeMock;
     
     Context context{loggerMock, btsPortMock, userPortMock, timerPortMock};
     IUeGui::Callback acceptCallback;
@@ -32,6 +34,8 @@ protected:
     ReceivingCallStateTestSuite()
     {
         ON_CALL(userPortMock, showViewTextMode()).WillByDefault(ReturnRef(textModeMock));
+        ON_CALL(userPortMock, getListViewMode()).WillByDefault(ReturnRef(listViewModeMock));
+        ON_CALL(userPortMock, setCallMode()).WillByDefault(ReturnRef(callModeMock));
         
         EXPECT_CALL(userPortMock, setAcceptCallback(_))
             .WillOnce(SaveArg<0>(&acceptCallback));
@@ -59,7 +63,6 @@ TEST_F(ReceivingCallStateTestSuite, shallAcceptCallAndTransitionToTalkingState)
     EXPECT_CALL(timerPortMock, stopTimer());
     
     acceptCallback();
-    
 }
 
 TEST_F(ReceivingCallStateTestSuite, shallRejectCallAndTransitionToConnectedState)
@@ -69,10 +72,10 @@ TEST_F(ReceivingCallStateTestSuite, shallRejectCallAndTransitionToConnectedState
     ::testing::Mock::VerifyAndClearExpectations(&btsPortMock);
     
     EXPECT_CALL(btsPortMock, sendCallDropped(CALLER_NUMBER));
+    EXPECT_CALL(userPortMock, showConnected());
     EXPECT_CALL(timerPortMock, stopTimer());
     
     rejectCallback();
-    
 }
 
 TEST_F(ReceivingCallStateTestSuite, shallTimeoutAndRejectCall)
@@ -82,6 +85,7 @@ TEST_F(ReceivingCallStateTestSuite, shallTimeoutAndRejectCall)
     ::testing::Mock::VerifyAndClearExpectations(&btsPortMock);
     
     EXPECT_CALL(btsPortMock, sendCallDropped(CALLER_NUMBER));
+    EXPECT_CALL(userPortMock, showConnected());
     EXPECT_CALL(timerPortMock, stopTimer());
     
     objectUnderTest.handleTimeout();
@@ -94,9 +98,11 @@ TEST_F(ReceivingCallStateTestSuite, shallRejectCallOnHomeButton)
     ::testing::Mock::VerifyAndClearExpectations(&btsPortMock);
     
     EXPECT_CALL(btsPortMock, sendCallDropped(CALLER_NUMBER));
+    EXPECT_CALL(userPortMock, showConnected());
     EXPECT_CALL(timerPortMock, stopTimer());
     
     objectUnderTest.handleHomeClicked();
+    
 }
 
 }
