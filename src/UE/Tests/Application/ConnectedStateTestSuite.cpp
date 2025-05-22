@@ -114,12 +114,15 @@ TEST_F(ConnectedStateTestSuite, shallTransitionToDiallingStateWhenDialClicked)
     ::testing::Mock::VerifyAndClearExpectations(&userPortMock);
     
     NiceMock<ICallModeMock> callModeMock;
+    NiceMock<ITextModeMock> textModeMock;
     ON_CALL(userPortMock, setCallMode()).WillByDefault(ReturnRef(callModeMock));
-    
+    ON_CALL(userPortMock, showViewTextMode()).WillByDefault(ReturnRef(textModeMock));
+
     EXPECT_CALL(userPortMock, setCallMode());
     EXPECT_CALL(userPortMock, showViewTextMode());
     EXPECT_CALL(callModeMock, clearIncomingText());
     EXPECT_CALL(callModeMock, clearOutgoingText());
+    EXPECT_CALL(textModeMock, setText(_));
     EXPECT_CALL(userPortMock, setAcceptCallback(_));
     EXPECT_CALL(userPortMock, setRejectCallback(_));
     EXPECT_CALL(timerPortMock, startTimer(_));
