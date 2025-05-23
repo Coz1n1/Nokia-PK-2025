@@ -2,6 +2,7 @@
 #include <gmock/gmock.h>
 
 #include "States/ConnectedState.hpp"
+#include "States/DiallingState.hpp"
 #include "Context.hpp"
 #include "Mocks/ILoggerMock.hpp"
 #include "Mocks/IBtsPortMock.hpp"
@@ -72,6 +73,64 @@ TEST_F(ConnectedStateTestSuite, shallSendSmsWhenAcceptCallbackCalled)
     
     // when
     acceptCallback();
+}
+
+TEST_F(ConnectedStateTestSuite, shallTransitionToReceivingCallStateOnIncomingCallRequest)
+{
+    // given
+    ConnectedState objectUnderTest{context};
+    const common::PhoneNumber CALLER_NUMBER{123};
+    
+    // These expectations are needed because ConnectedState will transition to ReceivingCallState
+    // which will call these methods in its constructor
+    NiceMock<ITextModeMock> textModeMock;
+    ON_CALL(userPortMock, showViewTextMode()).WillByDefault(ReturnRef(textModeMock));
+    
+    // expect
+    EXPECT_CALL(userPortMock, showViewTextMode());
+    EXPECT_CALL(userPortMock, setAcceptCallback(_));
+    EXPECT_CALL(userPortMock, setRejectCallback(_));
+    EXPECT_CALL(timerPortMock, startTimer(_));
+    
+    // when
+    objectUnderTest.handleCallRequest(CALLER_NUMBER);
+    
+    // Transition to ReceivingCallState happens in the implementation
+    // We can't directly verify the state change in this test structure,
+    // but the implementation should call context.setState<ReceivingCallState>(CALLER_NUMBER)
+}
+
+TEST_F(ConnectedStateTestSuite, shallTransitionToDiallingStateWhenDialClicked)
+{
+    ConnectedState objectUnderTest{context};
+    
+    EXPECT_CALL(userPortMock, showConnected());
+    EXPECT_CALL(userPortMock, getListViewMode()).WillOnce(ReturnRef(listViewModeMock));
+    EXPECT_CALL(listViewModeMock, clearSelectionList());
+    EXPECT_CALL(listViewModeMock, addSelectionListItem(_, _)).Times(3);  // Three menu items
+    EXPECT_CALL(userPortMock, setAcceptCallback(_)).WillOnce(SaveArg<0>(&acceptCallback));
+    
+    objectUnderTest.handleHomeClicked();
+    ::testing::Mock::VerifyAndClearExpectations(&userPortMock);
+    
+    NiceMock<ICallModeMock> callModeMock;
+    NiceMock<ITextModeMock> textModeMock;
+    ON_CALL(userPortMock, setCallMode()).WillByDefault(ReturnRef(callModeMock));
+    ON_CALL(userPortMock, showViewTextMode()).WillByDefault(ReturnRef(textModeMock));
+
+    EXPECT_CALL(userPortMock, setCallMode());
+    EXPECT_CALL(userPortMock, showViewTextMode());
+    EXPECT_CALL(callModeMock, clearIncomingText());
+    EXPECT_CALL(callModeMock, clearOutgoingText());
+    EXPECT_CALL(textModeMock, setText(_));
+    EXPECT_CALL(userPortMock, setAcceptCallback(_));
+    EXPECT_CALL(userPortMock, setRejectCallback(_));
+    EXPECT_CALL(timerPortMock, startTimer(_));
+    
+    EXPECT_CALL(listViewModeMock, getCurrentItemIndex())
+        .WillOnce(Return(std::make_pair(true, 2))); 
+    acceptCallback();
+ 
 }
 
 }
