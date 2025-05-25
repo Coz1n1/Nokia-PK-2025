@@ -35,6 +35,7 @@ public:
     virtual IUeGui::ICallMode& setCallMode() = 0;
     virtual void setAcceptCallback(IUeGui::Callback) = 0;
     virtual void setRejectCallback(IUeGui::Callback) = 0;
+    virtual void setHomeCallback(IUeGui::Callback) = 0;
 };
 
 }

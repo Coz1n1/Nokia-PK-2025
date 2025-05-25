@@ -38,6 +38,7 @@ void UserPort::showConnecting()
 
 void UserPort::showConnected()
 {
+    gui.showConnected();
     IUeGui::IListViewMode& menu = gui.setListViewMode();
     menu.clearSelectionList();
     menu.addSelectionListItem("Compose SMS", "");
@@ -93,6 +94,11 @@ void UserPort::setAcceptCallback(IUeGui::Callback callback)
 void UserPort::setRejectCallback(IUeGui::Callback callback)
 {
     gui.setRejectCallback(callback);
+}
+
+void UserPort::setHomeCallback(IUeGui::Callback callback)
+{
+    gui.setHomeCallback(callback);
 }
 
 void UserPort::setMenuCallback()

@@ -37,6 +37,7 @@ public:
     MOCK_METHOD(IUeGui::ICallMode&, setCallMode, (), (final));
     MOCK_METHOD(void, setAcceptCallback, (IUeGui::Callback), (final));
     MOCK_METHOD(void, setRejectCallback, (IUeGui::Callback), (final));
+    MOCK_METHOD(void, setHomeCallback, (IUeGui::Callback), (final));
 };
 
 }
