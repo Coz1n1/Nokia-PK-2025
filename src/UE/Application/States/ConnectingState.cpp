@@ -28,7 +28,7 @@ void ConnectingState::handleTimeout()
     context.setState<NotConnectedState>();
 }
 
-void ConnectingState::handleDisconnect()
+void ConnectingState::handleDisconnected()
 {
     context.setState<NotConnectedState>();
 }
