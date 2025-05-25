@@ -200,6 +200,11 @@ void QtUeGui::setRejectCallback(Callback callback)
     rejectCallback = callback;
 }
 
+void QtUeGui::setHomeCallback(Callback callback)
+{
+    homeCallback = callback;
+}
+
 void QtUeGui::setTitle(const std::string& title)
 {
     mainWindow.setWindowTitle(QString::fromStdString(title));

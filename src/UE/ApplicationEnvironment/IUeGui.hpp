@@ -23,10 +23,10 @@ public:
     using Callback = std::function<void()>;
 
     virtual ~IUeGui() = default;
-
     virtual void setCloseGuard(CloseGuard closeGuard) = 0;
     virtual void setAcceptCallback(Callback) = 0;
     virtual void setRejectCallback(Callback) = 0;
+    virtual void setHomeCallback(Callback) = 0;
 
     virtual void setTitle(const std::string& title) = 0;
     virtual void showConnected() = 0;

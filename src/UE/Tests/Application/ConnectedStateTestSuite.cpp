@@ -43,20 +43,20 @@ TEST_F(ConnectedStateTestSuite, shallShowSmsComposerViewWhenSmsComposeClicked)
     
     // expect
     EXPECT_CALL(userPortMock, showSmsComposerView());
-    EXPECT_CALL(userPortMock, setAcceptCallback(_));
+    EXPECT_CALL(userPortMock, setHomeCallback(_));
     
     // when
     objectUnderTest.handleSmsComposeClicked();
 }
 
-TEST_F(ConnectedStateTestSuite, shallSendSmsWhenAcceptCallbackCalled)
+TEST_F(ConnectedStateTestSuite, shallSendSmsWhenHomeCallbackCalled)
 {
     // given
     ConnectedState objectUnderTest{context};
     
     // Setup for SMS composition
     EXPECT_CALL(userPortMock, showSmsComposerView());
-    EXPECT_CALL(userPortMock, setAcceptCallback(_))
+    EXPECT_CALL(userPortMock, setHomeCallback(_))
         .WillOnce(SaveArg<0>(&acceptCallback));
     objectUnderTest.handleSmsComposeClicked();
     ::testing::Mock::VerifyAndClearExpectations(&userPortMock);

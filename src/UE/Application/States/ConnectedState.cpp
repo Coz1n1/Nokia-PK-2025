@@ -126,7 +126,7 @@ void ConnectedState::showSmsComposerView()
     auto& composeMode = context.user.getSmsComposeMode();
     composeMode.clearSmsText();
     
-    context.user.setAcceptCallback([this]() {
+    context.user.setHomeCallback([this]() {
         this->handleSmsSend();
     });
 }

@@ -96,6 +96,11 @@ void UserPort::setRejectCallback(IUeGui::Callback callback)
     gui.setRejectCallback(callback);
 }
 
+void UserPort::setHomeCallback(IUeGui::Callback callback)
+{
+    gui.setHomeCallback(callback);
+}
+
 void UserPort::setMenuCallback()
 {
     gui.setAcceptCallback([this]() {

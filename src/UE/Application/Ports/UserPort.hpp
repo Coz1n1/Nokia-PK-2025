@@ -27,6 +27,7 @@ public:
     IUeGui::ICallMode& setCallMode() override;
     void setAcceptCallback(IUeGui::Callback) override;
     void setRejectCallback(IUeGui::Callback) override;
+    void setHomeCallback(IUeGui::Callback) override;
     
 private:
     common::PrefixedLogger logger;
