@@ -18,7 +18,9 @@ public:
     void handleDisconnected() override;
     void handleCallAccepted(common::PhoneNumber from) override;
     void handleCallDropped(common::PhoneNumber from) override;
-    void handleUnknownRecipient();
+    void handleUnknownRecipient() override;
+    void handleSms(common::PhoneNumber from, const std::string& text) override;
+    void handleCallRequest(common::PhoneNumber from) override;
     
     // IUserEventsHandler interface
     void handleHomeClicked() override;

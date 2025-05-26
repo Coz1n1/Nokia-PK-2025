@@ -2,6 +2,7 @@
 
 #include "BaseState.hpp"
 #include "SmsDb.hpp"
+#include "SharedSmsDb.hpp"
 
 namespace ue
 {
@@ -30,7 +31,6 @@ private:
     void handleSmsSend();
     void refreshMessageIndicator();
     
-    SmsDb smsDb;
     std::vector<SmsMessage> currentMessagesList;
 };
 

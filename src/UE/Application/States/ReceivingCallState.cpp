@@ -1,6 +1,8 @@
 #include "ReceivingCallState.hpp"
 #include "ConnectedState.hpp"
 #include "TalkingState.hpp"
+#include "SmsDb.hpp"
+#include "SharedSmsDb.hpp"
 
 namespace ue
 {
@@ -64,6 +66,21 @@ void ReceivingCallState::rejectCall()
     context.bts.sendCallDropped(callerPhoneNumber);
     
     context.setState<ConnectedState>();
+}
+
+void ReceivingCallState::handleSms(common::PhoneNumber from, const std::string& text)
+{
+    logger.logInfo("Received SMS during incoming call from: ", from, ", text: ", text);
+    auto& smsDb = SharedSmsDb::getInstance();
+    smsDb.addSms(from, text);
+
+    context.user.showNewSms(true);
+}
+
+void ReceivingCallState::handleCallRequest(common::PhoneNumber from)
+{
+    logger.logInfo("Received another call request while handling incoming call, rejecting request from: ", from);
+    context.bts.sendCallDropped(from);
 }
 
 }

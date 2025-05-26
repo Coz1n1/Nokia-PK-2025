@@ -2,6 +2,8 @@
 #include "ConnectedState.hpp"
 #include "TalkingState.hpp"
 #include "NotConnectedState.hpp"
+#include "SmsDb.hpp"
+#include "SharedSmsDb.hpp"
 #include <sstream>
 #include <cstdlib>
 
@@ -133,6 +135,22 @@ void DiallingState::cancelCall()
     }
     
     context.setState<ConnectedState>();
+}
+
+void DiallingState::handleSms(common::PhoneNumber from, const std::string& text)
+{
+    logger.logInfo("Received SMS during dialling from: ", from, ", text: ", text);
+
+    auto& smsDb = SharedSmsDb::getInstance();
+    smsDb.addSms(from, text);
+    
+    context.user.showNewSms(true);
+}
+
+void DiallingState::handleCallRequest(common::PhoneNumber from)
+{
+    logger.logInfo("Received call request while dialling, ignoring request from: ", from);
+    context.bts.sendCallDropped(from);
 }
 
 }
