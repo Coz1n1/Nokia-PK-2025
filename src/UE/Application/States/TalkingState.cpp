@@ -1,5 +1,7 @@
 #include "TalkingState.hpp"
 #include "ConnectedState.hpp"
+#include "SmsDb.hpp"
+#include "SharedSmsDb.hpp"
 
 namespace ue
 {
@@ -60,6 +62,23 @@ void TalkingState::handleHomeClicked()
 void TalkingState::showConnectedView()
 {
     context.setState<ConnectedState>();
+}
+
+void TalkingState::handleSms(common::PhoneNumber from, const std::string& text)
+{
+    logger.logInfo("Received SMS during active call from: ", from, ", text: ", text);
+    
+
+    auto& smsDb = SharedSmsDb::getInstance();
+    smsDb.addSms(from, text);
+    
+    context.user.showNewSms(true);
+}
+
+void TalkingState::handleCallRequest(common::PhoneNumber from)
+{
+    logger.logInfo("Received call request during active call, rejecting request from: ", from);
+    context.bts.sendCallDropped(from);
 }
 
 }

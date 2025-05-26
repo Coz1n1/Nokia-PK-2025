@@ -2,6 +2,7 @@
 #include "NotConnectedState.hpp"
 #include "ReceivingCallState.hpp"
 #include "DiallingState.hpp"
+#include "SharedSmsDb.hpp"
 
 namespace ue
 {
@@ -20,6 +21,7 @@ void ConnectedState::handleDisconnected()
 void ConnectedState::handleSms(common::PhoneNumber from, const std::string& text)
 {
     logger.logInfo("Received SMS from: ", from, ", text: ", text);
+    auto& smsDb = SharedSmsDb::getInstance();
     smsDb.addSms(from, text);
     refreshMessageIndicator();
 }
@@ -86,6 +88,7 @@ void ConnectedState::showSmsListView()
 {
     context.user.showSmsListView();
     
+    auto& smsDb = SharedSmsDb::getInstance();
     currentMessagesList = smsDb.getSmsMessages();
     auto& menu = context.user.getListViewMode();
     
@@ -141,6 +144,7 @@ void ConnectedState::handleSmsSend()
     
     context.bts.sendSms(recipient, text);
     
+    auto& smsDb = SharedSmsDb::getInstance();
     smsDb.addSentSms(recipient, text);
     
     composeMode.clearSmsText();
@@ -172,6 +176,7 @@ void ConnectedState::showSmsView(const SmsMessage& message)
 
 void ConnectedState::refreshMessageIndicator()
 {
+    auto& smsDb = SharedSmsDb::getInstance();
     bool hasUnread = smsDb.hasUnreadSms();
     context.user.showNewSms(hasUnread);
 }
